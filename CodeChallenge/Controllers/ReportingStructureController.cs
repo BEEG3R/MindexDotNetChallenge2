@@ -19,7 +19,7 @@ namespace CodeChallenge.Controllers
         }
 
         [HttpGet("{id}", Name = "getNumberOfReportsByEmployeeId")]
-        public IActionResult GetNumberOfReportsByEmployeeId(string id)
+        public IActionResult GetStructureByEmployeeId(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -34,7 +34,7 @@ namespace CodeChallenge.Controllers
             }
 
             ReportingStructure rs = new(employee);
-            return Ok(rs.NumberOfReports);
+            return Ok(rs);
         }
     }
 }
