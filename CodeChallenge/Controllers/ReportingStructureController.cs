@@ -27,7 +27,7 @@ namespace CodeChallenge.Controllers
             }
             _logger.LogDebug($"Received reporting structure GET request for Employee ID '{id}'");
 
-            Employee employee = _employeeService.GetById(id);
+            Employee employee = _employeeService.GetByIdRecursive(id);
             if (employee == null)
             {
                 return NotFound($"No Employee record was found for ID '{id}'");

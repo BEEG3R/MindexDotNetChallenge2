@@ -9,6 +9,7 @@ namespace CodeChallenge.Services
     public interface IEmployeeService
     {
         Employee GetById(String id);
+        Employee GetByIdRecursive(string id, Employee e = null);
         Employee Create(Employee employee);
         Employee Replace(Employee originalEmployee, Employee newEmployee);
     }
