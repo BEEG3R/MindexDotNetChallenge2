@@ -22,6 +22,12 @@ namespace CodeChallenge.Models
             }
         }
 
+        /// <summary>
+        /// Traverse the Direct Reports tree using the given Employee as the root.
+        /// Direct Reports of Direct Reports are counted in the total produced by this method.
+        /// </summary>
+        /// <param name="employee">The Employee to use as the root of the lookup tree.</param>
+        /// <returns>An integer representing the number of Employees who report to the given Employee.</returns>
         private static int GetAllReports(Employee employee)
         {
             if (employee == null || employee.DirectReports == null)
