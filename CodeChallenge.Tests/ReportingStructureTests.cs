@@ -7,7 +7,7 @@ using CodeChallenge.Models;
 
 using CodeCodeChallenge.Tests.Integration.Extensions;
 using CodeCodeChallenge.Tests.Integration.Helpers;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CodeChallenge.Tests.Integration
@@ -43,8 +43,43 @@ namespace CodeChallenge.Tests.Integration
             HttpResponseMessage response = await _httpClient.GetAsync($"api/reportingstructure/{johnLennonId}");
 
             Assert.IsTrue(response.IsSuccessStatusCode);
-            ReportingStructure reportingStructure = response.DeserializeContent<ReportingStructure>();
-            Assert.AreEqual(expectedReports, reportingStructure.NumberOfReports);
+            ReportingStructure rs = response.DeserializeContent<ReportingStructure>();
+            Assert.AreEqual(expectedReports, rs.NumberOfReports);
+        }
+
+        [TestMethod]
+        public async Task GetStructureByEmployeeId_Returns_No_Reports_PeteBest()
+        {
+            const int expectedReports = 0;
+            const string peteBestId = "62c1084e-6e34-4630-93fd-9153afb65309";
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/reportingstructure/{peteBestId}");
+
+            Assert.IsTrue(response.IsSuccessStatusCode);
+            ReportingStructure rs = response.DeserializeContent<ReportingStructure>();
+            Assert.AreEqual(expectedReports, rs.NumberOfReports);
+        }
+
+        [TestMethod]
+        public async Task GetStructureByEmployeeId_Returns_NotFound_For_Null_ID()
+        {
+            const string badId = null;
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/reportingstructure/{badId}");
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task GetStructureByEmployeeId_Returns_NotFound_For_Invalid_ID()
+        {
+            const string badId = "-1";
+
+            HttpResponseMessage response = await _httpClient.GetAsync($"api/reportingstructure/{badId}");
+
+            Assert.IsFalse(response.IsSuccessStatusCode);
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

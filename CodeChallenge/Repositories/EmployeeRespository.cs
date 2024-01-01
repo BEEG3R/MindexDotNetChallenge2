@@ -36,45 +36,48 @@ namespace CodeChallenge.Repositories
         public Employee GetByIdRecursive(string id, Employee e = null)
         {
             Employee result = new();
-            if (e == null)
-            {
-                Employee root = _employeeContext.Employees
+            Employee lookup = _employeeContext.Employees
                     .Include(e => e.DirectReports)
                     .SingleOrDefault(e => e.EmployeeId == id);
+            if (lookup == null)
+            {
+                return null;
+            }
+
+            // if e is null, we haven't started to recurse.
+            // populate the Employee object with all properties from the lookup, then start the recursion.
+            if (e == null)
+            {
                 result = new Employee()
                 {
-                    EmployeeId = root.EmployeeId,
-                    FirstName = root.FirstName,
-                    LastName = root.LastName,
-                    Department = root.Department,
-                    DirectReports = root.DirectReports,
-                    Position = root.Position
+                    EmployeeId = lookup.EmployeeId,
+                    FirstName = lookup.FirstName,
+                    LastName = lookup.LastName,
+                    Department = lookup.Department,
+                    DirectReports = lookup.DirectReports,
+                    Position = lookup.Position
                 };
-                foreach (Employee emp in root.DirectReports)
+                foreach (Employee emp in lookup.DirectReports)
                 {
                     GetByIdRecursive(emp.EmployeeId, emp);
                 }
                 return result;
             }
-            Employee report = _employeeContext.Employees
-                .Include(e => e.DirectReports)
-                .SingleOrDefault(e => e.EmployeeId == id);
-            if (report == null)
-            {
-                return null;
-            }
+
+            // if we reach here, this is from a recursive call.
+            // populate the Direct Reports property
             result.DirectReports = new List<Employee>
             {
                 new Employee()
                 {
-                    EmployeeId = report.EmployeeId,
-                    FirstName = report.FirstName,
-                    LastName = report.LastName,
-                    Department = report.Department,
-                    Position = report.Position
+                    EmployeeId = lookup.EmployeeId,
+                    FirstName = lookup.FirstName,
+                    LastName = lookup.LastName,
+                    Department = lookup.Department,
+                    Position = lookup.Position
                 }
             };
-            foreach (Employee emp in report.DirectReports)
+            foreach (Employee emp in lookup.DirectReports)
             {
                 GetByIdRecursive(emp.EmployeeId, emp);
             }
