@@ -1,5 +1,6 @@
 ﻿using CodeChallenge.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace CodeChallenge.Data
         }
 
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Compensation> Compensations { get; set; }
     }
 }
