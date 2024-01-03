@@ -40,6 +40,15 @@ namespace CodeChallenge.Services
             return null;
         }
 
+        public Employee GetByIdRecursive(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+            return _employeeRepository.GetByIdRecursive(id, null);
+        }
+
         public Employee Replace(Employee originalEmployee, Employee newEmployee)
         {
             if(originalEmployee != null)
